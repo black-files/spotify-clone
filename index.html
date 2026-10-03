@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Spotify Clone</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        /* ================================
+           MUSIC PLAYER
+        ================================= */
+
+        .player {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            height: 90px;
+
+            background: #121212;
+
+            border-top: 1px solid #292929;
+
+            display: flex;
+            align-items: center;
+
+            padding: 10px 20px;
+
+            z-index: 9999;
+        }
+
+
+        /* ================================
+           SONG INFO
+        ================================= */
+
+        .now-playing {
+            width: 30%;
+
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .now-playing img {
+            width: 58px;
+            height: 58px;
+
+            object-fit: cover;
+
+            border-radius: 6px;
+        }
+
+        .song-details {
+            min-width: 0;
+        }
+
+        .song-details h3 {
+            color: white;
+
+            font-size: 14px;
+
+            margin: 0 0 5px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+        .song-details p {
+            color: #999;
+
+            font-size: 12px;
+
+            margin: 0;
+        }
+
+        .like-btn {
+            background: none;
+
+            border: none;
+
+            color: #aaa;
+
+            font-size: 22px;
+
+            cursor: pointer;
+        }
+
+        .like-btn:hover {
+            color: #1db954;
+        }
+
+
+        /* ================================
+           CENTER
+        ================================= */
+
+        .player-center {
+            width: 40%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            gap: 7px;
+        }
+
+
+        /* ================================
+           CONTROLS
+        ================================= */
+
+        .controls {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 18px;
+        }
+
+        .controls button {
+            background: none;
+
+            border: none;
+
+            color: #aaa;
+
+            font-size: 16px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .controls button:hover {
+            color: white;
+        }
+
+        .controls .play-button {
+            width: 36px;
+            height: 36px;
+
+            border-radius: 50%;
+
+            background: white;
+
+            color: black;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 15px;
+        }
+
+        .controls .play-button:hover {
+            background: #1db954;
+
+            color: white;
+        }
+
+        #shuffle.active,
+        #repeat.active {
+            color: #1db954;
+        }
+
+
+        /* ================================
+           PROGRESS
+        ================================= */
+
+        .progress-container {
+            width: 100%;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+        }
+
+        .progress-container span {
+            color: #999;
+
+            font-size: 10px;
+
+            min-width: 30px;
+
+            text-align: center;
+        }
+
+        #progress {
+            width: 100%;
+
+            height: 4px;
+
+            cursor: pointer;
+
+            accent-color: white;
+        }
+
+
+        /* ================================
+           VOLUME
+        ================================= */
+
+        .volume {
+            width: 30%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: flex-end;
+
+            gap: 8px;
+        }
+
+        .volume button {
+            background: none;
+
+            border: none;
+
+            color: #aaa;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+        .volume button:hover {
+            color: white;
+        }
+
+        #volume {
+            width: 100px;
+
+            height: 4px;
+
+            cursor: pointer;
+
+            accent-color: white;
+        }
+
+
+        /* ================================
+           SEARCH RESULTS
+        ================================= */
+
+        #searchResults {
+            display: none;
+
+            margin-top: 20px;
+        }
+
+        .search-result {
+            max-width: 600px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+            padding: 12px;
+
+            margin-bottom: 10px;
+
+            background: #181818;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .search-result:hover {
+            background: #282828;
+        }
+
+        .search-result img {
+            width: 60px;
+            height: 60px;
+
+            object-fit: cover;
+
+            border-radius: 6px;
+        }
+
+        .search-result h3 {
+            color: white;
+
+            margin: 0 0 5px;
+
+            font-size: 15px;
+        }
+
+        .search-result p {
+            color: #999;
+
+            margin: 0;
+
+            font-size: 12px;
+        }
+
+
+        /* ================================
+           MOBILE
+        ================================= */
+
+        @media (max-width: 700px) {
+
+            .player {
+                height: 75px;
+
+                padding: 8px 10px;
+            }
+
+            .now-playing {
+                width: 40%;
+            }
+
+            .now-playing img {
+                width: 48px;
+                height: 48px;
+            }
+
+            .song-details h3 {
+                font-size: 11px;
+            }
+
+            .song-details p {
+                font-size: 9px;
+            }
+
+            .like-btn {
+                display: none;
+            }
+
+            .player-center {
+                width: 60%;
+            }
+
+            .volume {
+                display: none;
+            }
+
+            .controls {
+                gap: 10px;
+            }
+
+            .controls button {
+                font-size: 13px;
+            }
+
+            .controls .play-button {
+                width: 32px;
+                height: 32px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+    <img src="images/spotify-logo.png" alt="Spotify">
+         </div>
+
+        <nav>
+
+            <a href="#" class="active">
+                ⌂ Home
+            </a>
+
+            <a href="#" id="openSearch">⌕ Search</a>
+
+            <a href="#">
+                ▣ Your Library
+            </a>
+
+        </nav>
+
+
+        <div class="playlist">
+
+            <h3>
+                PLAYLISTS
+            </h3>
+
+            <a href="#">
+                ＋ Create Playlist
+            </a>
+
+            <a href="#">
+                ♥ Liked Songs
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="arrows">
+
+                <button>
+                    ‹
+                </button>
+
+                <button>
+                    ›
+                </button>
+
+            </div>
+
+
+            <div class="search">
+
+                🔍
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="What do you want to play?"
+                >
+
+            </div>
+
+
+            <button class="profile">
+                R
+            </button>
+
+        </header>
+
+
+        <!-- CONTENT -->
+
+        <section class="content">
+
+
+            <!-- HERO -->
+
+            <div class="hero">
+
+                <div>
+
+                    <p>
+                        WELCOME BACK
+                    </p>
+
+                    <h1>
+                        Good music.<br>
+                        Good vibes.
+                    </h1>
+
+                    <span>
+                        Your favorite songs, all in one place.
+                    </span>
+
+                    <button id="playAll">
+                        ▶ Play All
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- RECENT PLAYLIST -->
+
+            <section class="section">
+
+                <div class="heading">
+
+                    <h2>
+                        Recent playlist
+                    </h2>
+
+                    <span>
+                        Show all
+                    </span>
+
+                </div>
+
+
+                <div class="cards">
+
+
+                    <div
+                        class="song-card"
+                        data-index="0"
+                    >
+
+                        <img src="images/song1.jpg">
+
+                        <div class="card-info">
+
+                            <h3>
+                                AWAARA ANGARA
+                            </h3>
+
+                            <p>
+                                FAHEEM ABDULA
+                            </p>
+
+                        </div>
+
+                        <button class="card-play">
+                            ▶
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="song-card"
+                        data-index="1"
+                    >
+
+                        <img src="images/song2.jpg">
+
+                        <div class="card-info">
+
+                            <h3>
+                                DEEWANA DEEWANA
+                            </h3>
+
+                            <p>
+                                ARJIT SINGH
+                            </p>
+
+                        </div>
+
+                        <button class="card-play">
+                            ▶
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="song-card"
+                        data-index="2"
+                    >
+
+                        <img src="images/song3.jpg">
+
+                        <div class="card-info">
+
+                            <h3>
+                                KALYANI
+                            </h3>
+
+                            <p>
+                                ARJN,KDS
+                            </p>
+
+                        </div>
+
+                        <button class="card-play">
+                            ▶
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="song-card"
+                        data-index="3"
+                    >
+
+                        <img src="images/song4.jpg">
+
+                        <div class="card-info">
+
+                            <h3>
+                                KHAT
+                            </h3>
+
+                            <p>
+                                NAVJOT AHUJA
+                            </p>
+
+                        </div>
+
+                        <button class="card-play">
+                            ▶
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="song-card"
+                        data-index="4"
+                    >
+
+                        <img src="images/song5.jpg">
+
+                        <div class="card-info">
+
+                            <h3>
+                                CRIMINAL
+                            </h3>
+
+                            <p>
+                                BRITNEY SPEARS
+                            </p>
+
+                        </div>
+
+                        <button class="card-play">
+                            ▶
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="song-card"
+                        data-index="5"
+                    >
+
+                        <img src="images/song6.jpg">
+
+                        <div class="card-info">
+
+                            <h3>
+                                TERE MERE RISHTA
+                            </h3>
+
+                            <p>
+                                MITHOON
+                            </p>
+
+                        </div>
+
+                        <button class="card-play">
+                            ▶
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="song-card"
+                        data-index="6"
+                    >
+
+                        <img src="images/song7.jpg">
+
+                        <div class="card-info">
+
+                            <h3>
+                                TERE ISHQ MEIN
+                            </h3>
+
+                            <p>
+                                ARJIT SINGH
+                            </p>
+
+                        </div>
+
+                        <button class="card-play">
+                            ▶
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="song-card"
+                        data-index="7"
+                    >
+
+                        <img src="images/song8.jpg">
+
+                        <div class="card-info">
+
+                            <h3>
+                                WARNING
+                            </h3>
+
+                            <p>
+                                ADDI KAYLAN
+                            </p>
+
+                        </div>
+
+                        <button class="card-play">
+                            ▶
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+            <!-- SEARCH RESULTS -->
+
+            <div id="searchResults"></div>
+
+
+            <!-- POPULAR -->
+
+            <section class="section">
+
+                <div class="heading">
+
+                    <h2>
+                        Popular right now
+                    </h2>
+
+                    <span>
+                        Show all
+                    </span>
+
+                </div>
+
+
+                <div class="popular">
+
+
+                    <div
+                        class="popular-song"
+                        data-index="0"
+                    >
+
+                        <img src="images/song1.jpg">
+
+                        <div>
+
+                            <h3>
+                                AWAARA ANGARA
+                            </h3>
+
+                            <p>
+                                FAHEEM ABDULA
+                            </p>
+
+                        </div>
+
+                        <button>
+                            ▶
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="popular-song"
+                        data-index="1"
+                    >
+
+                        <img src="images/song2.jpg">
+
+                        <div>
+
+                            <h3>
+                                DEEWANA DEEWANA
+                            </h3>
+
+                            <p>
+                                ARJIT SINGH
+                            </p>
+
+                        </div>
+
+                        <button>
+                            ▶
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="popular-song"
+                        data-index="2"
+                    >
+
+                        <img src="images/song3.jpg">
+
+                        <div>
+
+                            <h3>
+                                KALYANI
+                            </h3>
+
+                            <p>
+                                ARJN,KDS
+                            </p>
+
+                        </div>
+
+                        <button>
+                            ▶
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="popular-song"
+                        data-index="3"
+                    >
+
+                        <img src="images/song4.jpg">
+
+                        <div>
+
+                            <h3>
+                                KHAT
+                            </h3>
+
+                            <p>
+                                NAVJOT AHUJA
+                            </p>
+
+                        </div>
+
+                        <button>
+                            ▶
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+        </section>
+
+    </main>
+
+
+    <!-- ================================
+         MUSIC PLAYER
+    ================================= -->
+
+    <footer class="player">
+
+
+        <!-- SONG -->
+
+        <div class="now-playing">
+
+            <img
+                id="currentArt"
+                src="images/song1.jpg"
+                alt="Song"
+            >
+
+
+            <div class="song-details">
+
+                <h3 id="currentTitle">
+                    AWAARA ANGARA
+                </h3>
+
+                <p id="currentArtist">
+                    FAHEEM ABDULA
+                </p>
+
+            </div>
+
+
+            <button
+                id="like"
+                class="like-btn"
+            >
+                ♡
+            </button>
+
+        </div>
+
+
+        <!-- CONTROLS -->
+
+        <div class="player-center">
+
+
+            <div class="controls">
+
+                <button id="shuffle">
+                    🔀
+                </button>
+
+                <button id="previous">
+                    ⏮
+                </button>
+
+                <button
+                    id="playPause"
+                    class="play-button"
+                >
+                    ▶
+                </button>
+
+                <button id="next">
+                    ⏭
+                </button>
+
+                <button id="repeat">
+                    🔁
+                </button>
+
+            </div>
+
+
+            <!-- PROGRESS -->
+
+            <div class="progress-container">
+
+                <span id="currentTime">
+                    0:00
+                </span>
+
+                <input
+                    type="range"
+                    id="progress"
+                    min="0"
+                    max="100"
+                    value="0"
+                >
+
+                <span id="totalTime">
+                    0:00
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- VOLUME -->
+
+        <div class="volume">
+
+            <button id="mute">
+                🔊
+            </button>
+
+            <input
+                type="range"
+                id="volume"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0.8"
+            >
+
+        </div>
+
+
+    </footer>
+
+
+    <!-- AUDIO -->
+
+    <audio id="audio"></audio>
+
+
+    <!-- JS -->
+
+    <script src="script.js"></script>
+
+    <div id="searchWindow" class="search-window">
+
+    <div class="search-box">
+
+        <button id="closeSearch" class="close-search">✕</button>
+
+        <h2>Search</h2>
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="What do you want to play?"
+        >
+
+        <div id="searchResults"></div>
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>
